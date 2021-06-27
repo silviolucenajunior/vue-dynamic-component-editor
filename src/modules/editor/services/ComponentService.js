@@ -19,6 +19,15 @@ export default {
               'label': String
             }
           ]
+        },
+        {
+          name: 'NumberField',
+          placeholder: 'Number',
+          props: [
+            {
+              'label': String
+            }
+          ]
         }
       ]
     }
