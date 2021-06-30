@@ -1,52 +1,38 @@
 <script>
-   import draggable from 'vuedraggable'
    import ComponentPlaceholder from './ComponentPlaceholder.vue'
+   import ComponentService from '../services/ComponentService';
+
    export default {
      components: {
-       draggable,
        ComponentPlaceholder
      },
-     props: {
-       availableComponents: {
-         type: Array,
-         default: function() {
-           return [];
-         },
+     data(){
+       return {
+         availableComponents: []
        }
      },
+     mounted(){
+       this.availableComponents = ComponentService.getAvailableComponentList().components;
+     },
      methods: {
-       insertComponent(event, originalEvent) {
-         console.log('ops');
-         console.log(event.dragged)
-         console.log(event.related)
-         console.log(originalEvent);
-         console.log(event);
-       },
-       insertComponentA(event, originalEvent) {
-         console.log('ops  ------ ');
-         console.log(event.dragged)
-         console.log(event.related)
-         console.log(originalEvent);
-         console.log(event);
-       },
-       endListener(event){
-         console.log(event);
-         console.log('end')
-       },
-       moveListener(event){
-         console.log('move')
-         console.log(event.moved.element)
-         return true
+       insertComponent(component) {
+         this.$emit('componentInserted', component)
        }
      }
    }
 </script>
 <template>
-   <div>
-     <h2>Component List</h2>
-     <draggable :list="availableComponents" group="dynamicComponents"  @change="moveListener">
-        <component-placeholder v-for="(component, index) in availableComponents" :key="index" :component="component"></component-placeholder>
-     </draggable> 
-   </div>
-   
+   <v-list>
+     <v-list-item v-for="(component, index) in availableComponents" :key="index">
+       <v-list-item-content>
+          <component-placeholder :component="component"></component-placeholder>
+       </v-list-item-content>
+       <v-list-item-action>
+         <v-btn rounded @click="insertComponent(component)">
+            <v-icon left>mdi-plus-circle</v-icon>
+            Insert
+         </v-btn>
+       </v-list-item-action>
+     </v-list-item>
+   </v-list>
 </template>

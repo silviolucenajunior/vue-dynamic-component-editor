@@ -1,23 +1,31 @@
 <script>
-   import draggable from 'vuedraggable'
+import { VTextField } from 'vuetify/lib'
+
    export default {
       components: {
-         draggable
-      }
+         VTextField
+      },
+      props: {
+         components: {
+            type: Array,
+            required: true
+         }
+      },
+      
    }
 </script>
 <template>
-   <div>
-      <h1>Component Editor</h1>
-      <draggable class="componentEditor" group="dynamicComponents"></draggable>
-   </div>
+   <v-card max-width="1024" width="1024">
+      <v-card-text>
+         <v-form>
+            <component 
+               v-for="(component, index) in components" 
+               :key="index" 
+               :is="component.component" 
+               v-bind="component.props"></component>
+         </v-form>
+      </v-card-text>
+   </v-card>
 </template>
 <style scoped>
-   .componentEditor {
-      border: red 1px solid;
-      min-width: 200px;
-      min-height: 100px;
-      width: 200px;
-      height: 200px;
-   }
 </style>

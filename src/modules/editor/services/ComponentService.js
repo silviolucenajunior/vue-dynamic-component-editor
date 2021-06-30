@@ -4,28 +4,29 @@ export default {
       components: [
         {
           name: 'TextField',
+          component: 'VTextField',
           placeholder: 'Text',
           props: [
             {
-              label: String
-            }
+                name: 'label',
+                type: 'String',
+                label: 'Label',
+                component: 'v-text-field',
+                value: ''
+              }
           ]
         },
         {
           name: 'NumberField',
+          component:'VTextField',
           placeholder: 'Number',
           props: [
             {
-              'label': String
-            }
-          ]
-        },
-        {
-          name: 'NumberField',
-          placeholder: 'Number',
-          props: [
-            {
-              'label': String
+                name: 'label',
+                type: 'String',
+                label: 'Label',
+                component: 'v-text-field',
+                value: ''
             }
           ]
         }
@@ -36,15 +37,20 @@ export default {
   getPageDescriptor() {
     return {
       "name": "MyDynamicComponent",
-      "content": {
+      "content": [{
           "component": {
              "type": "Container",
+             "title": "Get Familiar",
+             "description": "description",
              "props": {
-                "flex": "row"
+                "flex": "row",
+                "id": "teste"
              },
              "content": [
                  {
                     "component": "TextInput",
+                    "order": 0,
+                    "uuid": 'ss',
                     "props": {
                        "label": "Cliente"
                     }
@@ -57,7 +63,7 @@ export default {
                  }
              ]
           }
-       }
+       }]
     }
   }
 }
