@@ -5,13 +5,32 @@
         Form Builder
       </v-toolbar-title>
       <v-spacer></v-spacer>
+      <v-row justify="space-around">
       <v-btn depressed @click.stop="availableComponentsDialog=true">
-      <v-icon left>
+        <v-icon left>
           mdi-plus
         </v-icon>
         Add Component
       </v-btn>
-
+      <v-btn depressed @click="saveForm">
+        <v-icon left>
+          mdi-content-save
+        </v-icon>
+        Save Form
+      </v-btn>
+      <v-btn depressed @click="loadForm">
+        <v-icon left>
+          mdi-reload
+        </v-icon>
+        Load Form
+      </v-btn>
+      <v-btn depressed @click="clearForm">
+        <v-icon left>
+          mdi-close
+        </v-icon>
+        Clear Form
+      </v-btn>
+      </v-row>
     </v-app-bar>
     <v-main>
       <div class="d-flex justify-center">
@@ -60,6 +79,7 @@ import AvailableComponentList from './modules/editor/components/AvailableCompone
 import ComponentPropertiesEditor from './modules/editor/components/ComponentPropertiesEditor.vue';
 import ComponentEditor from './modules/editor/components/ComponentEditor.vue';
 import ComponentFactory from './modules/builder/ComponentFactory';
+import ComponentRepository from './modules/builder/ComponentRepository';
 
 export default {
   name: 'App',
@@ -74,7 +94,8 @@ export default {
       availableComponentsDialog: false,
       componentPropertiesEditorDialog: false,
       activeComponent: null,
-      components: []
+      components: [],
+      form: []
     }
   },
   methods: {
@@ -89,6 +110,25 @@ export default {
       this.componentPropertiesEditorDialog = false;
       this.components.push(newComponent);
       this.activeComponent = null;
+
+      console.log(this.components);
+      console.log(this.form)
+    },
+
+    clearForm(){
+      this.components = [];
+      this.form = [];
+      this.activeComponent = null;
+    },
+
+    saveForm() {
+      this.form = this.components.slice(0);
+      ComponentRepository.saveForm(this.form.splice(0))
+    },
+
+    loadForm() {
+      this.components = ComponentRepository.loadForm();
+      this.form = this.components.slice(0)
     }
 
   }
