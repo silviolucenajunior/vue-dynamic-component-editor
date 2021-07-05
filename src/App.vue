@@ -34,7 +34,19 @@
     </v-app-bar>
     <v-main>
       <div class="d-flex justify-center">
-         <component-editor :components="components"></component-editor>
+        <div>
+          <component-editor :components="components" @componentSelected="componentSelected"></component-editor>
+        </div>
+        <div>
+          <component-properties-editor
+            v-if="activeComponent && !componentPropertiesEditorDialog"
+            @updateComponentProperties="updateComponentInEditor"
+            @componentSelected="componentSelected"
+            v-model="activeComponent" 
+            :component="activeComponent"
+            :edit="true"
+          ></component-properties-editor>
+        </div>
       </div>
     </v-main>
 
@@ -63,7 +75,8 @@
     >
       <component-properties-editor
         v-if="activeComponent"
-        @updateComponentProperties="updateComponentInEditor" 
+        @updateComponentProperties="updateComponentInEditor"
+        @componentSelected="componentSelected"
         v-model="activeComponent" 
         :component="activeComponent"
       ></component-properties-editor>
@@ -105,14 +118,27 @@ export default {
       this.componentPropertiesEditorDialog = true;
     },
     
-    updateComponentInEditor(){
-      let newComponent = ComponentFactory.getComponent(this.activeComponent);
-      this.componentPropertiesEditorDialog = false;
-      this.components.push(newComponent);
-      this.activeComponent = null;
-
-      console.log(this.components);
-      console.log(this.form)
+    updateComponentInEditor(edit){
+      console.log(edit)
+      if (edit) {
+        console.log("Editando um componente já existente");
+        console.log(this.activeComponent);
+        this.components[0] = ComponentFactory.getComponent(this.activeComponent);
+        console.log("Diapbos");
+        console.log(this.components);
+        this.$forceUpdate();
+        let tempComponents  = this.components;
+        this.components = [];
+        this.$nextTick(() => {
+          this.components = tempComponents;
+        })
+        //this.components = [];
+      } else {
+        let newComponent = ComponentFactory.getComponent(this.activeComponent);
+        this.componentPropertiesEditorDialog = false;
+        this.components.push(newComponent);
+        this.activeComponent = null;
+      }
     },
 
     clearForm(){
@@ -129,6 +155,12 @@ export default {
     loadForm() {
       this.components = ComponentRepository.loadForm();
       this.form = this.components.slice(0)
+    },
+
+    componentSelected(component){
+      console.log("Outter Component Selected")
+      console.log(component)
+      this.activeComponent = component.descriptor;
     }
 
   }

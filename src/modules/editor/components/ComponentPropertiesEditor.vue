@@ -4,6 +4,13 @@
          value: {
             type: Object,
             required: true
+         },
+         edit: {
+            type: Boolean,
+            required: false,
+            default: function () {
+               return false
+            }
          }
       }
    }
@@ -21,7 +28,7 @@
          </v-row>
       </v-card-text>
       <v-card-actions>
-         <v-btn tile @click="$emit('updateComponentProperties')">
+         <v-btn tile @click="$emit('updateComponentProperties', edit)">
             <v-icon left>
                mdi-content-save
             </v-icon>

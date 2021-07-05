@@ -11,6 +11,13 @@ import { VTextField } from 'vuetify/lib'
             required: true
          }
       },
+      methods: {
+         componentSelected(component){
+            console.log("Inside component selected");
+            console.log(component)
+            this.$emit('componentSelected', component);
+         }
+      }
       
    }
 </script>
@@ -22,6 +29,7 @@ import { VTextField } from 'vuetify/lib'
                v-for="(component, index) in components" 
                :key="index" 
                :is="component.component" 
+               @click="componentSelected(component)"
                v-bind="component.props"></component>
          </v-form>
       </v-card-text>

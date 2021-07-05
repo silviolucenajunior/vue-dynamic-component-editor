@@ -12,7 +12,8 @@ export default  {
 
     return {
       component: componentDescriptor.component,
-      props: props
+      props: props,
+      descriptor: componentDescriptor
     }
   }
 }
