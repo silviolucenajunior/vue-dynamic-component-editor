@@ -5,9 +5,10 @@
        <component v-for="(field, index) in step.fields" 
          :key="index"
          :is="field.component"
-         v-model="model[field.model]"
-         :model="model"
+         v-model="formData[field.model]"
+         :model="formData"
          v-bind="field.props.default"
+         :hasError="validation.formData[field.model].$error"
        >
          {{ field.order }}
        </component>
@@ -29,6 +30,7 @@
      components: {
        BaseInput
      },
+     inject: ['formData'],
      props: {
         step: {
           type: Object,
@@ -36,6 +38,9 @@
         },
         model: {
           type: Object,
+          required: false
+        },
+        validation: {
           required: false
         }
       },

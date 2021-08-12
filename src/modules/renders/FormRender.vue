@@ -6,7 +6,7 @@
          :key="step.order"
          :step=step
          :ref="step.name"
-         :model="formData"
+         :validation="$v"
       ></StepRender>
       <input v-model="formData.nome" name="nome" placeholder="nome">
     </div>
@@ -44,11 +44,29 @@
     return models;
   }
 
+  function getValidationsFromSchema(schema) {
+    let steps = schema.steps;
+    let validations = [];
+    steps.forEach( step => {
+      step.fields.forEach( field => {
+        validations.push(field);
+      })
+    })
+
+    return validations;
+  }
+
    
 export default {
   name: 'FormRender',
   components: {
     StepRender
+  },
+  provide: function () {
+    return {
+      'formData': this.formData,
+      'validation': this.$v.formData
+    }
   },
   data: () => {
     return {
@@ -74,7 +92,10 @@ export default {
                     "value": null
                   }
                 },
-                "model": 'nome'
+                "model": 'nome',
+                validation: {
+                  nome: ['required']
+                }
               },
               {
                 "order": 2,
@@ -86,7 +107,10 @@ export default {
                     "value": null
                   }
                 },
-                "model": 'email'
+                "model": 'email',
+                validation: {
+                  email: ['required']
+                }
               }
             ]
 
@@ -95,14 +119,10 @@ export default {
       }
     }
   },
+
   created() {
     let models = getModelsFromSchema(this.jsonSchema);
     parseFormData.call(this, this.formData, models);
-  },
-
-  mounted() {
-    console.log("Mountesd");
-    console.log(this.$v);
   },
   methods: {
     debug() {
@@ -115,6 +135,14 @@ export default {
       }
 
       return this.model
+    }
+  },
+
+  validations() {
+    debugger; //eslint-disable-line
+    let validators = ValidationParser(getValidationsFromSchema(this.jsonSchema));
+    return {
+      formData: validators
     }
   },
   /*
